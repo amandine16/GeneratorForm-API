@@ -14,7 +14,7 @@ router.post("/form/create", async (req, res) => {
       const form = await Form.findOne({ title: req.fields.title });
       if (form) {
         res.status(409).json({
-          message: `This form's title "${req.fields.title}" is already exist`,
+          message: `This form's title is already exist`,
         });
       } else {
         const newForm = new Form({
