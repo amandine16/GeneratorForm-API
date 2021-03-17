@@ -20,7 +20,6 @@ router.post("/form/create", async (req, res) => {
         const newForm = new Form({
           title: req.fields.title,
           questions: [],
-          //   createdAt :
         });
         await newForm.save();
         res.status(200).json(newForm);
@@ -56,14 +55,14 @@ router.get("/form/:id", async (req, res) => {
   }
 });
 
+// Update form
 router.post("/form/update/:id", async (req, res) => {
   try {
     //   Search the form in bdd
     const formToModify = await Form.findById(req.params.id);
-
     // if form exist
     if (formToModify) {
-      if (req.fields.title || req.fields.rank || req.fields.question) {
+      if (req.fields.title || req.fields.questions) {
         if (req.fields.title) {
           //   Search in BDD, if form already exist
           const form = await Form.findOne({ title: req.fields.title });
@@ -75,20 +74,14 @@ router.post("/form/update/:id", async (req, res) => {
             formToModify.title = req.fields.title;
           }
         }
-        if (req.fields.rank) {
-          formToModify.rank = req.fields.rank;
+
+        if (req.fields.questions) {
+          formToModify.questions = req.fields.questions;
         }
-        if (req.fields.question) {
-          formToModify.questionAndAnswer.push({
-            // Envoie d'un tableau complet nommé question, avec les qst, leurs ordres, leurs types
-            question: req.fields.question,
-          });
-          // formToModify.questionAndAnswer.question.rank = req.fields.rank
-        }
-        if (req.fields.answer) {
-          // à modifier => recup l'index de la question pour cibler la bonne réponse de question
-          formToModify.questionAndAnswer.answer.push(req.fields.answer);
-        }
+        // if (req.fields.answer) {
+        //   // à modifier => recup l'index de la question pour cibler la bonne réponse de question
+        //   formToModify.questionAndAnswer.answer.push(req.fields.answer);
+        // }
         await formToModify.save();
         // send info only question
         res.status(200).json(formToModify);
