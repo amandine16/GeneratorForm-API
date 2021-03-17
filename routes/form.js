@@ -49,9 +49,7 @@ router.get("/form/:id", async (req, res) => {
     if (formById) {
       res.status(200).json(formById);
     } else {
-      res
-        .status(400)
-        .json({ message: `The form ${req.params.id} does not exist` });
+      res.status(400).json({ message: `The form does not exist` });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -62,11 +60,20 @@ router.post("/form/update/:id", async (req, res) => {
   try {
     //   Search the form in bdd
     const formToModify = await Form.findById(req.params.id);
+
     // if form exist
     if (formToModify) {
       if (req.fields.title || req.fields.rank || req.fields.question) {
         if (req.fields.title) {
-          formToModify.title = req.fields.title;
+          //   Search in BDD, if form already exist
+          const form = await Form.findOne({ title: req.fields.title });
+          if (form) {
+            res.status(409).json({
+              message: `This form's title is already exist`,
+            });
+          } else {
+            formToModify.title = req.fields.title;
+          }
         }
         if (req.fields.rank) {
           formToModify.rank = req.fields.rank;
@@ -99,11 +106,9 @@ router.post("/form/delete/:id", async (req, res) => {
     // console.log(formToDelete);
     if (formToDelete) {
       await formToDelete.delete();
-      res.status(200).json({ message: `The form ${req.params.id} is deleted` });
+      res.status(200).json({ message: `The form is deleted` });
     } else {
-      res
-        .status(400)
-        .json({ message: `The form ${req.params.id} does not exist` });
+      res.status(400).json({ message: `The form does not exist` });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
