@@ -86,9 +86,7 @@ router.post("/form/update/:id", async (req, res) => {
         res.status(400).json({ message: "Missing parameters" });
       }
     } else {
-      res
-        .status(400)
-        .json({ message: `The form ${req.params.id} does not exist` });
+      res.status(400).json({ message: `The form does not exist` });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
