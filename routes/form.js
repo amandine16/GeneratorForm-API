@@ -79,7 +79,10 @@ router.post("/form/update/:id", async (req, res) => {
           formToModify.rank = req.fields.rank;
         }
         if (req.fields.question) {
-          formToModify.questionAndAnswer.push(req.fields.question);
+          formToModify.questionAndAnswer.push({
+            // Envoie d'un tableau complet nommé question, avec les qst, leurs ordres, leurs types
+            question: req.fields.question,
+          });
           // formToModify.questionAndAnswer.question.rank = req.fields.rank
         }
         if (req.fields.answer) {
