@@ -9,23 +9,24 @@ const Form = require("../models/Form");
 // create new form
 router.post("/form/create", async (req, res) => {
   try {
-    if (req.fields.title) {
-      //   Search in BDD, if form already exist
-      const form = await Form.findOne({ title: req.fields.title });
-      if (form) {
-        res.status(409).json({
-          message: `This form's title is already exist`,
-        });
-      } else {
+    //   Search in BDD, if form already exist
+    const form = await Form.findOne({ title: req.fields.title });
+    if (form) {
+      res.status(409).json({
+        message: `This form's title is already exist`,
+      });
+    } else {
+      if (req.fields.title) {
+        //  For creation new form, question is empty array
         const newForm = new Form({
           title: req.fields.title,
           questions: [],
         });
         await newForm.save();
         res.status(200).json(newForm);
+      } else {
+        res.status(400).json({ message: "Missing parameters" });
       }
-    } else {
-      res.status(400).json({ message: "Missing parameters" });
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -42,6 +43,7 @@ router.get("/forms", async (req, res) => {
   }
 });
 
+// Get one form
 router.get("/form/:id", async (req, res) => {
   try {
     const formById = await Form.findById(req.params.id);
@@ -74,16 +76,10 @@ router.post("/form/update/:id", async (req, res) => {
             formToModify.title = req.fields.title;
           }
         }
-
         if (req.fields.questions) {
           formToModify.questions = req.fields.questions;
         }
-        // if (req.fields.answer) {
-        //   // à modifier => recup l'index de la question pour cibler la bonne réponse de question
-        //   formToModify.questionAndAnswer.answer.push(req.fields.answer);
-        // }
         await formToModify.save();
-        // send info only question
         res.status(200).json(formToModify);
       } else {
         res.status(400).json({ message: "Missing parameters" });
