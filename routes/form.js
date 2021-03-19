@@ -47,7 +47,6 @@ router.get("/forms", async (req, res) => {
 router.get("/form/:id", async (req, res) => {
   try {
     const formById = await Form.findById(req.params.id);
-    console.log(formById);
     if (formById) {
       res.status(200).json(formById);
     } else {
