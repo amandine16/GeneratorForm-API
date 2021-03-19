@@ -14,7 +14,7 @@ router.post("/answer/create", async (req, res) => {
       if (req.fields.answer) {
         const newAnswer = await new Answer({
           answer: req.fields.answer,
-
+          questionsAndAnswer: req.fields.qstRep,
           ifForm: req.fields.idForm,
         });
         // Add answer in bdd
