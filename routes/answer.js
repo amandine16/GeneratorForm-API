@@ -1,72 +1,50 @@
-// const express = require("express");
-// const formidable = require("express-formidable");
-// const router = express.Router();
+const express = require("express");
+const formidable = require("express-formidable");
+const router = express.Router();
 
-// // Import model
+// Import model
 // const Question = require("../models/Question");
-// const Form = require("../models/Form");
-// // Create answer
-// router.post("/answer/create", async (req, res) => {
-//   try {
-//     // Check if question exist
-//     const question = await Question.findById(req.fields.idquestion).populate(
-//       "Question"
-//     );
-//     if (question) {
-//       // If title parameters exist
-//       if (req.fields.title) {
-//         const ifQstExist = await Question.findOne({ title: req.fields.title });
-//         // if question does not exist already
-//         if (!ifQstExist) {
-//           const newQuestion = await new Question({
-//             title: req.fields.title,
-//             // Created rank auto
-//             rank: form.questions.length + 1,
-//           });
-//           // Add question in bdd
-//           await newQuestion.save();
-//           // Add question in form
-//           await form.questions.push(newQuestion);
-//           await form.save();
-//           // Return all info on form and its question
-//           const formAndQuestion = await Form.findById(
-//             req.fields.idForm
-//           ).populate({
-//             path: "Question",
-//           });
-//           res.status(200).json(formAndQuestion);
-//         } else {
-//           res
-//             .status(400)
-//             .json(`This question :"${req.fields.title}" already exist`);
-//         }
-//       } else {
-//         res.status(400).json({
-//           message: `Missing parameters`,
-//         });
-//       }
-//     } else {
-//       res.status(400).json({
-//         message: `This form with id : "${req.fields.idForm}" does not exist `,
-//       });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
+const Form = require("../models/Form");
+// Create answer
+router.post("/answer/create", async (req, res) => {
+  try {
+    // Check if form exist
+    const form = await Form.findById(req.fields.idForm).populate("Form");
+    if (form) {
+      if (req.fields.answer) {
+        const newAnswer = await new Answer({
+          answer: req.fields.answer,
 
-// // Get all questions
-// router.get("/questions", async (req, res) => {
-//   try {
-//     const questions = await Question.find().populate("Form");
-//     res.status(200).json(questions);
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
+          ifForm: req.fields.idForm,
+        });
+        // Add answer in bdd
+        await newAnswer.save();
+        res.status(200).json(newAnswer);
+      } else {
+        res.status(400).json(`Missing parameters`);
+      }
+    } else {
+      res.status(400).json({
+        message: `This form does not exist`,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Get all answer
+router.get("/answers", async (req, res) => {
+  try {
+    const answers = await Answer.find().populate("Form");
+    res.status(200).json(answers);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 // // Update Question (order and title)
-// router.post("/question/update/:id", async (req, res) => {
+// router.post("/answer/update/:id", async (req, res) => {
 //   try {
 //     //   Search the question in bdd
 //     const questionToModify = await Question.findById(req.params.id).populate({
@@ -113,4 +91,4 @@
 //   }
 // });
 
-// module.exports = router;
+module.exports = router;
