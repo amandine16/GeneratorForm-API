@@ -21,8 +21,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Declaration road
 const formRoute = require("./routes/form.js");
 app.use(formRoute);
-// const questionRoute = require("./routes/question.js");
-// app.use(questionRoute);
+const answerRoute = require("./routes/answer.js");
+app.use(answerRoute);
 
 // Road unknow
 app.all("*", (req, res) => {

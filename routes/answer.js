@@ -5,17 +5,19 @@ const router = express.Router();
 // Import model
 // const Question = require("../models/Question");
 const Form = require("../models/Form");
+const Answer = require("../models/Answer");
 // Create answer
 router.post("/answer/create", async (req, res) => {
   try {
     // Check if form exist
     const form = await Form.findById(req.fields.idForm).populate("Form");
     if (form) {
-      if (req.fields.answer) {
+      if (req.fields.questionAndAnswers) {
         const newAnswer = await new Answer({
-          answer: req.fields.answer,
-          questionsAndAnswer: req.fields.qstRep,
-          ifForm: req.fields.idForm,
+          questionAndAnswers: req.fields.questionAndAnswers,
+          idForm: req.fields.idForm,
+          // questionsAndAnswer: req.fields.qstRep,
+          // ifForm: req.fields.idForm,
         });
         // Add answer in bdd
         await newAnswer.save();
@@ -36,7 +38,8 @@ router.post("/answer/create", async (req, res) => {
 // Get all answer
 router.get("/answers", async (req, res) => {
   try {
-    const answers = await Answer.find().populate("Form");
+    const answers = await Answer.find();
+    console.log(answers);
     res.status(200).json(answers);
   } catch (error) {
     res.status(400).json({ error: error.message });

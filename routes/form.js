@@ -21,6 +21,7 @@ router.post("/form/create", async (req, res) => {
         const newForm = new Form({
           title: req.fields.title,
           questions: [],
+          answers: [],
         });
         await newForm.save();
         res.status(200).json(newForm);
