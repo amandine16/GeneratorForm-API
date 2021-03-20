@@ -12,9 +12,9 @@ router.post("/answer/create", async (req, res) => {
     // Check if form exist
     const form = await Form.findById(req.fields.idForm);
     if (form) {
-      if (req.fields.questionAndAnswers) {
+      if (req.fields.questionsAndAnswers) {
         const newAnswer = await new Answer({
-          questionAndAnswers: req.fields.questionAndAnswers,
+          questionsAndAnswers: req.fields.questionsAndAnswers,
           idForm: req.fields.idForm,
           // questionsAndAnswer: req.fields.qstRep,
           // ifForm: req.fields.idForm,
@@ -43,7 +43,8 @@ router.post("/answer/update/:id", async (req, res) => {
     // if answer exist
     if (answerToModify) {
       if (req.fields.questionsAndAnswers) {
-        answerToModify.questiosAndAnswers = req.fields.questionsAndAnswers;
+        console.log(1);
+        answerToModify.questionsAndAnswers = req.fields.questionsAndAnswers;
         await answerToModify.save();
         res.status(200).json(answerToModify);
       } else {
