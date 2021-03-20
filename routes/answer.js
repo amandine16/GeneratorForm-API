@@ -35,12 +35,23 @@ router.post("/answer/create", async (req, res) => {
   }
 });
 
-// Get all answer
-// router.get("/answers", async (req, res) => {
+// // Update answer
+// router.post("/answer/update/:id", async (req, res) => {
 //   try {
-//     const answers = await Answer.find();
-//     console.log(answers);
-//     res.status(200).json(answers);
+//     //   Search the form in bdd
+//     const answerToModify = await Answer.findById(req.params.id);
+//     // if answer exist
+//     if (answerToModify) {
+//       if (req.fields.questionsAndAnswers) {
+//         answerToModify.questiosAndAnswers = req.fields.questionsAndAnswers;
+//         await answerToModify.save();
+//         res.status(200).json(answerToModify);
+//       } else {
+//         res.status(400).json("Missing parameters");
+//       }
+//     } else {
+//       res.status(400).json({ message: `The answer does not exist` });
+//     }
 //   } catch (error) {
 //     res.status(400).json({ error: error.message });
 //   }
