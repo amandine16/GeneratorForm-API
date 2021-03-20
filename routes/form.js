@@ -65,7 +65,7 @@ router.post("/form/update/:id", async (req, res) => {
     const formToModify = await Form.findById(req.params.id);
     // if form exist
     if (formToModify) {
-      if (req.fields.title || req.fields.questions) {
+      if (req.fields.title || req.fields.questions || req.fields.idAnswer) {
         if (req.fields.title) {
           //   Search in BDD, if form already exist
           const form = await Form.findOne({ title: req.fields.title });
@@ -79,6 +79,9 @@ router.post("/form/update/:id", async (req, res) => {
         }
         if (req.fields.questions) {
           formToModify.questions = req.fields.questions;
+        }
+        if (req.fields.idAnswer) {
+          formToModify.answers = req.fields.idAnswer;
         }
         await formToModify.save();
         res.status(200).json(formToModify);
