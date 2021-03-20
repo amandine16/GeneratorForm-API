@@ -10,7 +10,7 @@ const Answer = require("../models/Answer");
 router.post("/answer/create", async (req, res) => {
   try {
     // Check if form exist
-    const form = await Form.findById(req.fields.idForm).populate("Form");
+    const form = await Form.findById(req.fields.idForm);
     if (form) {
       if (req.fields.questionAndAnswers) {
         const newAnswer = await new Answer({
@@ -36,45 +36,29 @@ router.post("/answer/create", async (req, res) => {
 });
 
 // Get all answer
-router.get("/answers", async (req, res) => {
-  try {
-    const answers = await Answer.find();
-    console.log(answers);
-    res.status(200).json(answers);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+// router.get("/answers", async (req, res) => {
+//   try {
+//     const answers = await Answer.find();
+//     console.log(answers);
+//     res.status(200).json(answers);
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
+// });
 
-// Update Answer
-router.post("/answer/update/:idAnswer", async (req, res) => {
+// Get Answers by idForm
+router.get("/answers/:idForm", async (req, res) => {
   try {
-    //   Search the form in bdd
-    const answers = await Answer.find(req.params.idAnswer);
-    // if form exist
-    if (answers) {
-      if (req.fields.title || req.fields.questions) {
-        if (req.fields.title) {
-          //   Search in BDD, if form already exist
-          const form = await Form.findOne({ title: req.fields.title });
-          if (form) {
-            res.status(409).json({
-              message: `This form's title is already exist`,
-            });
-          } else {
-            formToModify.title = req.fields.title;
-          }
-        }
-        if (req.fields.questions) {
-          formToModify.questions = req.fields.questions;
-        }
-        await formToModify.save();
-        res.status(200).json(formToModify);
+    const form = await Form.findById(req.params.idForm);
+    if (form) {
+      const answers = await Answer.find({ idForm: req.params.idForm });
+      if (answers) {
+        res.status(200).json(answers);
       } else {
-        res.status(400).json({ message: "Missing parameters" });
+        res.status(400).json("Error");
       }
     } else {
-      res.status(400).json({ message: `The form does not exist` });
+      res.status(400).json("This forms does not exist");
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
