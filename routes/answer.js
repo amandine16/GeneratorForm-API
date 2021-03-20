@@ -35,27 +35,27 @@ router.post("/answer/create", async (req, res) => {
   }
 });
 
-// // Update answer
-// router.post("/answer/update/:id", async (req, res) => {
-//   try {
-//     //   Search the form in bdd
-//     const answerToModify = await Answer.findById(req.params.id);
-//     // if answer exist
-//     if (answerToModify) {
-//       if (req.fields.questionsAndAnswers) {
-//         answerToModify.questiosAndAnswers = req.fields.questionsAndAnswers;
-//         await answerToModify.save();
-//         res.status(200).json(answerToModify);
-//       } else {
-//         res.status(400).json("Missing parameters");
-//       }
-//     } else {
-//       res.status(400).json({ message: `The answer does not exist` });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
+// Update answer
+router.post("/answer/update/:id", async (req, res) => {
+  try {
+    //   Search the form in bdd
+    const answerToModify = await Answer.findById(req.params.id);
+    // if answer exist
+    if (answerToModify) {
+      if (req.fields.questionsAndAnswers) {
+        answerToModify.questiosAndAnswers = req.fields.questionsAndAnswers;
+        await answerToModify.save();
+        res.status(200).json(answerToModify);
+      } else {
+        res.status(400).json("Missing parameters");
+      }
+    } else {
+      res.status(400).json({ message: `The answer does not exist` });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 
 // Get Answers by idForm
 router.get("/answers/:idForm", async (req, res) => {
