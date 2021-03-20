@@ -46,52 +46,38 @@ router.get("/answers", async (req, res) => {
   }
 });
 
-// // Update Question (order and title)
-// router.post("/answer/update/:id", async (req, res) => {
-//   try {
-//     //   Search the question in bdd
-//     const questionToModify = await Question.findById(req.params.id).populate({
-//       path: "Form",
-//     });
-//     // if question exist
-//     if (questionToModify) {
-//       if (req.fields.title) {
-//         questionToModify.title = req.fields.title;
-//         await questionToModify.save();
-//         res.status(200).json({
-//           message: `The title has been modified by : "${req.fields.title}"`,
-//           result: questionToModify,
-//         });
-//       } else {
-//         res.status(400).json({ message: "Missing parameters" });
-//       }
-//     } else {
-//       res
-//         .status(400)
-//         .json({ message: `The question : "${req.params.id}" does not exist` });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
-// // Delete Question
-// router.post("/question/delete/:id", async (req, res) => {
-//   try {
-//     const questionToDelete = await Question.findById(req.params.id);
-//     if (questionToDelete) {
-//       await questionToDelete.delete();
-//       res
-//         .status(200)
-//         .json({ message: `The question ${req.params.id} is deleted` });
-//     } else {
-//       res
-//         .status(400)
-//         .json({ message: `The question ${req.params.id} does not exist` });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
-// });
-
+// Update Answer
+router.post("/answer/update/:idAnswer", async (req, res) => {
+  try {
+    //   Search the form in bdd
+    const answers = await Answer.find(req.params.idAnswer);
+    // if form exist
+    if (answers) {
+      if (req.fields.title || req.fields.questions) {
+        if (req.fields.title) {
+          //   Search in BDD, if form already exist
+          const form = await Form.findOne({ title: req.fields.title });
+          if (form) {
+            res.status(409).json({
+              message: `This form's title is already exist`,
+            });
+          } else {
+            formToModify.title = req.fields.title;
+          }
+        }
+        if (req.fields.questions) {
+          formToModify.questions = req.fields.questions;
+        }
+        await formToModify.save();
+        res.status(200).json(formToModify);
+      } else {
+        res.status(400).json({ message: "Missing parameters" });
+      }
+    } else {
+      res.status(400).json({ message: `The form does not exist` });
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
 module.exports = router;
