@@ -4,7 +4,6 @@ const router = express.Router();
 
 // Import model Form
 const Form = require("../models/Form");
-// const Question = require("../models/Question");
 
 // create new form
 router.post("/form/create", async (req, res) => {

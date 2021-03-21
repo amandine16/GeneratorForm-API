@@ -3,9 +3,9 @@ const formidable = require("express-formidable");
 const router = express.Router();
 
 // Import model
-// const Question = require("../models/Question");
 const Form = require("../models/Form");
 const Answer = require("../models/Answer");
+
 // Create answer
 router.post("/answer/create", async (req, res) => {
   try {
@@ -16,8 +16,6 @@ router.post("/answer/create", async (req, res) => {
         const newAnswer = await new Answer({
           questionsAndAnswers: req.fields.questionsAndAnswers,
           idForm: req.fields.idForm,
-          // questionsAndAnswer: req.fields.qstRep,
-          // ifForm: req.fields.idForm,
         });
         // Add answer in bdd
         await newAnswer.save();
@@ -76,4 +74,5 @@ router.get("/answers/:idForm", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 module.exports = router;
